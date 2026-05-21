@@ -13,6 +13,7 @@ import {
   RefreshCw,
   Volume2,
   VolumeX,
+  X,
 } from "lucide-react";
 
 export type SidebarTab =
@@ -31,6 +32,8 @@ interface SidebarProps {
   setIsDefenseActive: (active: boolean) => void;
   soundEnabled: boolean;
   setSoundEnabled: (enabled: boolean) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 interface MenuItem {
@@ -47,6 +50,8 @@ export default function Sidebar({
   setIsDefenseActive,
   soundEnabled,
   setSoundEnabled,
+  isOpen,
+  onClose,
 }: SidebarProps) {
   const [cpuUsage, setCpuUsage] = useState(14.2);
   const [sysTime, setSysTime] = useState("");
@@ -69,7 +74,7 @@ export default function Sidebar({
     const updateTime = () => {
       const d = new Date();
       setSysTime(
-        d.toLocaleTimeString("pt-BR", { hour12: false }) +
+         d.toLocaleTimeString("pt-BR", { hour12: false }) +
           "." +
           String(d.getMilliseconds()).padStart(3, "0")
       );
@@ -96,28 +101,55 @@ export default function Sidebar({
     } else {
       setIsDefenseActive(false);
     }
+    onClose();
   };
 
   return (
-    <aside className="w-64 h-full flex flex-col justify-between p-4 bg-slate-950/80 border-r border-cyan-500/10 backdrop-blur-xl relative font-mono select-none z-30">
-      {/* tech-dots mask for design styling */}
-      <div className="absolute inset-0 tech-dots opacity-5 pointer-events-none" />
+    <>
+      {/* Mobile drawer backdrop overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[45] lg:hidden cursor-pointer transition-opacity duration-300"
+          onClick={onClose}
+        />
+      )}
+
+      <aside
+        className={`fixed inset-y-0 left-0 w-64 h-full flex flex-col justify-between p-4 bg-slate-950/95 border-r border-cyan-500/10 backdrop-blur-2xl font-mono select-none z-50 transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:flex ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+        style={{
+          paddingTop: "calc(16px + env(safe-area-inset-top))",
+          paddingBottom: "calc(16px + env(safe-area-inset-bottom))",
+        }}
+      >
+        {/* tech-dots mask for design styling */}
+        <div className="absolute inset-0 tech-dots opacity-5 pointer-events-none" />
 
       {/* Main Top Brand Area */}
       <div className="flex flex-col gap-6">
         {/* Brand/Logo */}
-        <div className="flex items-center gap-3 border-b border-cyan-500/10 pb-4">
-          <div className="w-8 h-8 rounded border border-cyber-cyan/50 flex items-center justify-center relative overflow-hidden bg-cyan-950/20">
-            {/* Spinning holographic core */}
-            <div className="absolute inset-0.5 rounded-full border border-dashed border-cyber-cyan animate-spin" style={{ animationDuration: "12s" }} />
-            <Cpu className="w-4 h-4 text-cyber-cyan animate-pulse" />
+        <div className="flex items-center justify-between border-b border-cyan-500/10 pb-4 w-full">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded border border-cyber-cyan/50 flex items-center justify-center relative overflow-hidden bg-cyan-950/20">
+              {/* Spinning holographic core */}
+              <div className="absolute inset-0.5 rounded-full border border-dashed border-cyber-cyan animate-spin" style={{ animationDuration: "12s" }} />
+              <Cpu className="w-4 h-4 text-cyber-cyan animate-pulse" />
+            </div>
+            <div>
+              <h1 className="text-sm font-bold tracking-widest text-white flex items-center gap-1">
+                CLIMA<span className="text-cyber-cyan">TUR</span>
+              </h1>
+              <p className="text-[8px] text-slate-500 tracking-[0.2em] uppercase font-bold">BAIA INTEL SYSTEM</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-sm font-bold tracking-widest text-white flex items-center gap-1">
-              CLIMA<span className="text-cyber-cyan">TUR</span>
-            </h1>
-            <p className="text-[8px] text-slate-500 tracking-[0.2em] uppercase font-bold">BAIA INTEL SYSTEM</p>
-          </div>
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-slate-900 border border-slate-800 rounded text-cyber-cyan lg:hidden cursor-pointer"
+            title="Fechar Menu"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
         {/* Navigation Tabs */}
@@ -199,5 +231,6 @@ export default function Sidebar({
         </div>
       </div>
     </aside>
+    </>
   );
 }

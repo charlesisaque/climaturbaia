@@ -9,13 +9,23 @@ import AlertPanel from "../components/AlertPanel";
 import AnalyticsPanel from "../components/AnalyticsPanel";
 import DefenseCivilMode from "../components/DefenseCivilMode";
 import WeatherParticles from "../components/WeatherParticles";
-import { Palmtree, Sliders, ShieldCheck, HelpCircle, Sun, CloudRain, ShieldAlert } from "lucide-react";
+import { Palmtree, Sliders, ShieldCheck, HelpCircle, Sun, CloudRain, ShieldAlert, Globe, AlertTriangle, LayoutDashboard } from "lucide-react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<SidebarTab>("dashboard");
   const [selectedCity, setSelectedCity] = useState<CityKey>("ilheus");
   const [isDefenseActive, setIsDefenseActive] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleTabClick = (tabId: SidebarTab) => {
+    setActiveTab(tabId);
+    if (tabId === "defesa_civil") {
+      setIsDefenseActive(true);
+    } else {
+      setIsDefenseActive(false);
+    }
+  };
 
   // Simulation controls state (modified by Config tab)
   const [simRainFactor, setSimRainFactor] = useState(0); // 0 to 100 increase mm
@@ -146,6 +156,8 @@ export default function Home() {
           setIsDefenseActive={setIsDefenseActive}
           soundEnabled={soundEnabled}
           setSoundEnabled={setSoundEnabled}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
         />
 
         {/* Content Panel Area */}
@@ -156,10 +168,11 @@ export default function Home() {
             selectedCityData={activeCityData}
             isDefenseActive={isDefenseActive}
             globalRiskScore={globalRiskScore}
+            onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
           />
 
           {/* Scrolling Content Panels */}
-          <div className="flex-grow overflow-y-auto p-4 space-y-4">
+          <div className="flex-grow overflow-y-auto p-4 pb-[calc(84px+env(safe-area-inset-bottom))] lg:pb-4 space-y-4">
             <AnimatePresence mode="wait">
               
               {/* DEFESA CIVIL Tactical Mode */}
@@ -500,6 +513,64 @@ export default function Home() {
               )}
 
             </AnimatePresence>
+          </div>
+
+          {/* Dedicated Bottom Navigation HUD bar (mobile only) */}
+          <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-slate-950/95 border-t border-cyan-500/15 backdrop-blur-xl flex justify-around items-center pt-2 pb-[calc(8px+env(safe-area-inset-bottom))] px-2 shadow-[0_-8px_32px_rgba(0,0,0,0.9)]">
+            {[
+              { id: "dashboard" as const, label: "Painel", icon: LayoutDashboard },
+              { id: "mapa" as const, label: "Mapa", icon: Globe },
+              { id: "alertas" as const, label: "Alertas", icon: AlertTriangle, badge: true },
+              { id: "defesa_civil" as const, label: "Defesa Civil", icon: ShieldAlert, alert: true },
+              { id: "config" as const, label: "Config", icon: Sliders },
+            ].map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              
+              let btnColor = "text-slate-500 hover:text-slate-300";
+              let glowBarColor = "";
+              
+              if (isActive) {
+                if (item.id === "defesa_civil") {
+                  btnColor = "text-cyber-red font-bold";
+                  glowBarColor = "bg-red-500 shadow-[0_0_8px_#ef4444]";
+                } else if (item.id === "alertas") {
+                  btnColor = "text-cyber-orange font-bold";
+                  glowBarColor = "bg-orange-500 shadow-[0_0_8px_#f97316]";
+                } else {
+                  btnColor = "text-cyber-cyan font-bold";
+                  glowBarColor = "bg-cyber-cyan shadow-[0_0_8px_#00d8f6]";
+                }
+              }
+
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleTabClick(item.id)}
+                  className={`flex flex-col items-center justify-center py-1 flex-1 relative min-h-[44px] cursor-pointer select-none transition-colors duration-200 ${btnColor}`}
+                >
+                  {/* Glowing active top indicator bar */}
+                  {isActive && (
+                    <div className={`absolute top-0 left-1/4 right-1/4 h-[2px] rounded-full ${glowBarColor}`} />
+                  )}
+                  
+                  <div className="relative">
+                    <Icon className="w-5 h-5" />
+                    {/* Pulsing indicator dots */}
+                    {item.badge && (
+                      <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse shadow-[0_0_4px_#f97316]" />
+                    )}
+                    {item.alert && (
+                      <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-red-500 animate-ping shadow-[0_0_6px_#ef4444]" />
+                    )}
+                  </div>
+                  
+                  <span className="text-[9px] font-mono tracking-wider uppercase mt-1 leading-none">
+                    {item.label}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

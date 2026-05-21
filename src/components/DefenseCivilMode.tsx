@@ -13,11 +13,16 @@ interface LogMessage {
 }
 
 export default function DefenseCivilMode() {
+  const [mounted, setMounted] = useState(false);
   const [logs, setLogs] = useState<LogMessage[]>([]);
   const [sirenOn, setSirenOn] = useState(false);
   const [evacProgress, setEvacProgress] = useState(64);
   const [saturationRate, setSaturationRate] = useState(88);
   const terminalEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Sound generator using Web Audio API for high-tech alerts (pure JS, no assets needed!)
   const playBeep = (freq = 880, duration = 0.15, type: OscillatorType = "sine") => {
@@ -132,15 +137,23 @@ export default function DefenseCivilMode() {
     { name: "16h", vazao: 1300 },
   ];
 
+  if (!mounted) {
+    return (
+      <div className="w-full h-80 glass-panel rounded-2xl flex items-center justify-center font-mono text-xs text-slate-500">
+        INITIALIZING CIVIL DEFENSE ENGINE HUD...
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full flex flex-col gap-4 font-mono select-none relative z-10">
       
       {/* 1. Tactical Critical Warning Banner Header */}
-      <div className="glass-panel border-red-500/30 bg-red-950/10 p-3 rounded-xl flex items-center justify-between animate-pulse">
+      <div className="glass-panel border-red-500/30 bg-red-950/10 p-3 rounded-xl flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between animate-pulse">
         <div className="flex items-center gap-3">
-          <ShieldAlert className="w-6 h-6 text-cyber-red animate-ping" />
+          <ShieldAlert className="w-6 h-6 text-cyber-red animate-ping shrink-0" />
           <div>
-            <h2 className="text-sm font-black text-cyber-red tracking-widest">
+            <h2 className="text-xs sm:text-sm font-black text-cyber-red tracking-widest break-words">
               SITUATION COMMAND HUB : ACTIVE THREAT CONTROL
             </h2>
             <p className="text-4xs text-slate-400">RESTRICTED USE // HIGH INTENSITY CIVIL DEFENSE ENGINE</p>
@@ -152,14 +165,14 @@ export default function DefenseCivilMode() {
             setSirenOn(!sirenOn);
             playBeep(700, 0.1, "sine");
           }}
-          className={`flex items-center gap-1.5 px-3 py-1 text-2xs font-bold border rounded-lg transition-all ${
+          className={`flex items-center justify-center gap-1.5 px-3 py-2 md:py-1 text-2xs font-bold border rounded-lg transition-all cursor-pointer ${
             sirenOn
               ? "bg-red-500 border-red-500 text-white shadow-[0_0_15px_#ef4444]"
               : "border-red-500/40 text-cyber-red hover:bg-red-500/10"
           }`}
         >
-          <Radio className={`w-3.5 h-3.5 ${sirenOn ? "animate-spin" : ""}`} />
-          {sirenOn ? "DESATIVAR SIRENE AUDIO" : "AUDIO ALARME LOCAL"}
+          <Radio className={`w-3.5 h-3.5 shrink-0 ${sirenOn ? "animate-spin" : ""}`} />
+          <span>{sirenOn ? "DESATIVAR SIRENE AUDIO" : "AUDIO ALARME LOCAL"}</span>
         </button>
       </div>
 
@@ -208,7 +221,7 @@ export default function DefenseCivilMode() {
                   "Disparo manual executado para todas as sirenes do Rio Cachoeira (Ilhéus). Evacuação recomendada."
                 )
               }
-              className="px-2 py-2 text-3xs font-black border border-red-500/40 text-cyber-red rounded bg-red-950/10 hover:bg-red-500/20 hover:border-red-500 transition-all text-center animate-pulse"
+              className="px-2 py-2.5 min-h-[44px] flex items-center justify-center text-[10px] sm:text-3xs font-black border border-red-500/40 text-cyber-red rounded bg-red-950/10 hover:bg-red-500/20 hover:border-red-500 transition-all text-center animate-pulse cursor-pointer select-none"
             >
               ☢️ SIRENES GERAIS
             </button>
@@ -221,7 +234,7 @@ export default function DefenseCivilMode() {
                 );
                 setEvacProgress((prev) => Math.min(prev + 5, 100));
               }}
-              className="px-2 py-2 text-3xs font-black border border-orange-500/40 text-cyber-orange rounded bg-orange-950/10 hover:bg-orange-500/20 hover:border-orange-500 transition-all text-center"
+              className="px-2 py-2.5 min-h-[44px] flex items-center justify-center text-[10px] sm:text-3xs font-black border border-orange-500/40 text-cyber-orange rounded bg-orange-950/10 hover:bg-orange-500/20 hover:border-orange-500 transition-all text-center cursor-pointer select-none"
             >
               💬 DISPARAR SMS
             </button>
@@ -233,7 +246,7 @@ export default function DefenseCivilMode() {
                   "Sinalização eletrônica de trânsito em Salvador e Ilhéus atualizada: Desvios de vales ativos."
                 )
               }
-              className="px-2 py-2 text-3xs font-black border border-cyan-500/40 text-cyber-cyan rounded bg-cyan-950/10 hover:bg-cyan-500/20 hover:border-cyan-500 transition-all text-center"
+              className="px-2 py-2.5 min-h-[44px] flex items-center justify-center text-[10px] sm:text-3xs font-black border border-cyan-500/40 text-cyber-cyan rounded bg-cyan-950/10 hover:bg-cyan-500/20 hover:border-cyan-500 transition-all text-center cursor-pointer select-none"
             >
               🚧 TRÂNSITO COGNITIVO
             </button>
@@ -246,7 +259,7 @@ export default function DefenseCivilMode() {
                 );
                 setEvacProgress(92);
               }}
-              className="px-2 py-2 text-3xs font-black border border-white/20 text-white rounded bg-slate-900 hover:bg-white/10 transition-all text-center"
+              className="px-2 py-2.5 min-h-[44px] flex items-center justify-center text-[10px] sm:text-3xs font-black border border-white/20 text-white rounded bg-slate-900 hover:bg-white/10 transition-all text-center cursor-pointer select-none"
             >
               ✈️ APOIO BRIGADA AÉREA
             </button>
@@ -349,7 +362,7 @@ export default function DefenseCivilMode() {
             <div className="h-24 w-full bg-slate-950/60 border border-red-500/10 rounded-lg p-2">
               <span className="text-[8px] text-slate-500 uppercase block mb-1">VAZÃO FLUVIAL ESTIMADA (m³/s)</span>
               <ResponsiveContainer width="100%" height="90%">
-                <AreaChart data={flowSimulationData} margin={{ top: 5, right: 5, left: -25, bottom: 5 }}>
+                <AreaChart data={flowSimulationData} margin={{ top: 5, right: 5, left: -15, bottom: 5 }}>
                   <CartesianGrid stroke="rgba(239,68,68,0.03)" vertical={false} />
                   <XAxis dataKey="name" fontSize={7} tickLine={false} axisLine={false} />
                   <YAxis fontSize={7} tickLine={false} axisLine={false} />

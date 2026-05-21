@@ -1,19 +1,21 @@
 "use client";
 
 import React from "react";
-import { Shield, Sparkles, AlertCircle, Sun, Wind, CloudRain } from "lucide-react";
+import { Shield, Sparkles, AlertCircle, Sun, Wind, CloudRain, Menu } from "lucide-react";
 import { CityData } from "./HolographicMap";
 
 interface TopBarProps {
   selectedCityData: CityData;
   isDefenseActive: boolean;
   globalRiskScore: number;
+  onToggleSidebar: () => void;
 }
 
 export default function TopBar({
   selectedCityData,
   isDefenseActive,
   globalRiskScore,
+  onToggleSidebar,
 }: TopBarProps) {
   // Compute risk level labels and styles for the global score
   const getGlobalRiskText = (score: number) => {
@@ -26,22 +28,36 @@ export default function TopBar({
   const riskMeta = getGlobalRiskText(globalRiskScore);
 
   return (
-    <header className="relative w-full border-b border-cyan-500/10 bg-slate-950/75 backdrop-blur-xl p-3 flex flex-col md:flex-row items-center justify-between gap-4 font-mono select-none z-20">
+    <header
+      className="relative w-full border-b border-cyan-500/10 bg-slate-950/75 backdrop-blur-xl p-3 flex flex-col lg:flex-row items-center justify-between gap-3 font-mono select-none z-20"
+      style={{ paddingTop: "calc(12px + env(safe-area-inset-top))" }}
+    >
       
-      {/* 1. Scrolling Headline Marquee / AI Status */}
-      <div className="flex items-center gap-3 w-full md:w-auto">
-        {/* Pulsing indicator */}
-        <div className="flex items-center gap-2 px-3 py-1 bg-cyan-950/20 border border-cyber-cyan/30 rounded-lg text-cyber-cyan text-2xs font-semibold">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-cyan opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-cyber-cyan"></span>
-          </span>
-          IA CLIMÁTICA ONLINE
+      {/* 1. Hamburger Burger Menu & AI Status */}
+      <div className="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-start">
+        <div className="flex items-center gap-2">
+          {/* Hamburger Menu Trigger */}
+          <button
+            onClick={onToggleSidebar}
+            className="p-2.5 hover:bg-slate-900 border border-slate-800 rounded transition-all text-cyber-cyan lg:hidden cursor-pointer mr-1 flex items-center justify-center min-w-[44px] min-h-[44px]"
+            title="Abrir Menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+
+          {/* Pulsing indicator */}
+          <div className="flex items-center gap-2 px-2.5 py-1 bg-cyan-950/20 border border-cyber-cyan/30 rounded-lg text-cyber-cyan text-2xs font-semibold">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyber-cyan opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyber-cyan"></span>
+            </span>
+            <span className="hidden sm:inline">IA CLIMÁTICA</span> ONLINE
+          </div>
         </div>
 
-        {/* System active indicator */}
+        {/* System active status indicator */}
         <div
-          className={`flex items-center gap-1.5 px-3 py-1 border rounded-lg text-2xs font-semibold transition-all duration-300 ${
+          className={`flex items-center gap-1.5 px-2.5 py-1 border rounded-lg text-2xs font-semibold transition-all duration-300 ${
             isDefenseActive
               ? "border-red-500/40 text-red-500 bg-red-950/20 animate-pulse"
               : "border-emerald-500/30 text-cyber-green bg-emerald-950/10"
@@ -52,7 +68,7 @@ export default function TopBar({
               isDefenseActive ? "bg-red-500 animate-ping" : "bg-cyber-green"
             }`}
           />
-          {isDefenseActive ? "D. CIVIL ATIVA" : "SISTEMA ATIVO"}
+          {isDefenseActive ? "D. CIVIL" : "SISTEMA ATIVO"}
         </div>
       </div>
 
@@ -65,16 +81,16 @@ export default function TopBar({
       </div>
 
       {/* 3. Global Risks Telemetry HUD */}
-      <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
-        {/* Selected City metrics overview */}
-        <div className="flex items-center gap-3 border-r border-cyan-500/10 pr-4">
+      <div className="flex items-center justify-between w-full lg:w-auto lg:justify-end gap-3 border-t border-cyan-500/5 lg:border-t-0 pt-2 lg:pt-0">
+        {/* Selected City metrics */}
+        <div className="flex items-center gap-2 border-r border-cyan-500/10 pr-3">
           <div className="text-right">
-            <div className="text-[8px] text-slate-500">MONITORANDO:</div>
-            <div className="text-2xs font-bold text-white tracking-widest uppercase">
+            <div className="text-[7px] text-slate-500">ESTAÇÃO:</div>
+            <div className="text-3xs font-bold text-white tracking-wider uppercase truncate max-w-[80px]">
               {selectedCityData.name}
             </div>
           </div>
-          <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded p-1">
+          <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded px-1.5 py-0.5">
             {selectedCityData.risk === "green" ? (
               <Sun className="w-3.5 h-3.5 text-cyber-green" />
             ) : selectedCityData.risk === "yellow" ? (
@@ -82,19 +98,19 @@ export default function TopBar({
             ) : (
               <CloudRain className="w-3.5 h-3.5 text-cyber-red" />
             )}
-            <span className="text-2xs text-cyber-cyan font-bold font-mono">{selectedCityData.temp}°C</span>
+            <span className="text-[10px] text-cyber-cyan font-bold font-mono">{selectedCityData.temp}°C</span>
           </div>
         </div>
 
-        {/* Global Bahia Threat Level gauge */}
-        <div className="flex items-center gap-3">
+        {/* Global threat index */}
+        <div className="flex items-center gap-2">
           <div className="text-right">
-            <div className="text-[8px] text-slate-500">RISCO GLOBAL BAHIA:</div>
-            <div className="text-2xs font-bold text-white">
-              SCORE: <span className="text-cyber-cyan font-mono">{globalRiskScore}</span>/100
+            <div className="text-[7px] text-slate-500">RISCO GLOBAL:</div>
+            <div className="text-3xs font-bold text-white">
+              <span className="text-cyber-cyan font-mono">{globalRiskScore}</span>/100
             </div>
           </div>
-          <div className={`px-2.5 py-1 text-2xs font-bold border rounded uppercase ${riskMeta.color}`}>
+          <div className={`px-2 py-0.5 text-3xs font-bold border rounded uppercase ${riskMeta.color}`}>
             {riskMeta.text}
           </div>
         </div>

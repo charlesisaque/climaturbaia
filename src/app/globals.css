@@ -95,11 +95,18 @@ body {
 /* Glassmorphism card templates */
 .glass-panel {
   background: rgba(9, 15, 29, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(0, 216, 246, 0.1);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 1024px) {
+  .glass-panel {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
 }
 
 .glass-panel:hover {
@@ -109,10 +116,17 @@ body {
 
 .glass-panel-red {
   background: rgba(15, 9, 12, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(239, 68, 68, 0.15);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+@media (min-width: 1024px) {
+  .glass-panel-red {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
 }
 
 .glass-panel-red:hover {
@@ -122,8 +136,16 @@ body {
 
 .glass-panel-orange {
   background: rgba(15, 11, 9, 0.7);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(249, 115, 22, 0.15);
+}
+
+@media (min-width: 1024px) {
+  .glass-panel-orange {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
 }
 
 .glass-panel-orange:hover {
@@ -162,3 +184,18 @@ body {
   pointer-events: none;
   z-index: 10;
 }
+
+/* Helper to hide scrollbars while permitting touch drag scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Premium Mobile Tap feedback mitigation */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+

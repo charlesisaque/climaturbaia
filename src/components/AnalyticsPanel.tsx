@@ -170,26 +170,26 @@ export default function AnalyticsPanel({ selectedCityData }: AnalyticsPanelProps
           </div>
 
           {/* Selector Tabs */}
-          <div className="flex bg-slate-950/80 border border-cyan-500/10 rounded p-0.5 gap-0.5 font-mono">
+          <div className="flex overflow-x-auto no-scrollbar max-w-[55%] sm:max-w-none bg-slate-950/80 border border-cyan-500/10 rounded p-0.5 gap-0.5 font-mono">
             <button
               onClick={() => setActiveTab("temp")}
-              className={`px-2.5 py-0.5 text-4xs rounded transition-all ${
+              className={`px-2.5 py-1 text-[8px] sm:text-4xs rounded transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === "temp"
                   ? "bg-cyan-500/20 text-cyber-cyan font-bold"
                   : "text-slate-500 hover:text-slate-300"
               }`}
             >
-              TEMPERATURA & UMIDADE
+              TEMPERATURA / UMIDADE
             </button>
             <button
               onClick={() => setActiveTab("wind")}
-              className={`px-2.5 py-0.5 text-4xs rounded transition-all ${
+              className={`px-2.5 py-1 text-[8px] sm:text-4xs rounded transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                 activeTab === "wind"
                   ? "bg-cyan-500/20 text-cyber-cyan font-bold"
                   : "text-slate-500 hover:text-slate-300"
               }`}
             >
-              VENTO & CHUVA
+              VENTO / CHUVA
             </button>
           </div>
         </div>
@@ -197,7 +197,7 @@ export default function AnalyticsPanel({ selectedCityData }: AnalyticsPanelProps
         {/* Graph Render Container */}
         <div className="relative z-10 flex-grow h-40 mt-4 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
               <defs>
                 <linearGradient id="tempGlow" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#00f2fe" stopOpacity={0.2} />

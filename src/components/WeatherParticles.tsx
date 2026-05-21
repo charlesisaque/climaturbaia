@@ -80,8 +80,12 @@ export default function WeatherParticles({ weatherType }: WeatherParticlesProps)
       return { x, y, vx, vy, size, alpha, color };
     };
 
-    // Pre-populate particles
-    const maxParticles = weatherType === "defense" ? 180 : weatherType === "rain" ? 120 : 60;
+    // Pre-populate particles (optimized for mobile viewports)
+    const isMobile = width < 768;
+    const maxParticles = isMobile
+      ? (weatherType === "defense" ? 80 : weatherType === "rain" ? 50 : 25)
+      : (weatherType === "defense" ? 180 : weatherType === "rain" ? 120 : 60);
+
     for (let i = 0; i < maxParticles; i++) {
       particles.push(createParticle(true));
     }

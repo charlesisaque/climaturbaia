@@ -134,24 +134,24 @@ export default function AlertPanel({ selectedCity, selectedCityData }: AlertPane
   };
 
   return (
-    <div className="w-full h-full flex flex-col justify-between p-4 glass-panel border border-cyan-500/10 rounded-2xl overflow-hidden min-h-[480px]">
+    <div className="w-full h-full flex flex-col justify-between p-4 glass-panel border border-cyan-500/10 rounded-2xl overflow-hidden min-h-[320px] lg:min-h-[480px]">
       <div className="absolute inset-0 tech-dots opacity-5 pointer-events-none" />
 
       {/* Title & Actions */}
       <div className="relative z-10 flex items-center justify-between border-b border-cyan-500/10 pb-3">
         <div>
-          <h3 className="text-md font-mono text-white tracking-widest flex items-center gap-2">
+          <h3 className="text-sm md:text-md font-mono text-white tracking-widest flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 text-cyber-red animate-pulse" />
             LIVE ALERTS ENGINE
           </h3>
-          <p className="text-xs text-slate-400 font-mono">IA Climate Threat Database</p>
+          <p className="text-2xs md:text-xs text-slate-400 font-mono">IA Climate Threat Database</p>
         </div>
 
         {/* Tab Selector */}
         <div className="flex bg-slate-950/80 border border-cyan-500/10 rounded p-0.5 gap-0.5">
           <button
             onClick={() => setFilter("todos")}
-            className={`px-2 py-0.5 text-3xs font-mono rounded transition-all ${
+            className={`px-2 py-1 text-3xs font-mono rounded transition-all cursor-pointer ${
               filter === "todos"
                 ? "bg-cyan-500/20 text-cyber-cyan font-bold"
                 : "text-slate-500 hover:text-slate-300"
@@ -161,7 +161,7 @@ export default function AlertPanel({ selectedCity, selectedCityData }: AlertPane
           </button>
           <button
             onClick={() => setFilter("criticos")}
-            className={`px-2 py-0.5 text-3xs font-mono rounded transition-all ${
+            className={`px-2 py-1 text-3xs font-mono rounded transition-all cursor-pointer ${
               filter === "criticos"
                 ? "bg-red-500/20 text-cyber-red font-bold"
                 : "text-slate-500 hover:text-slate-300"
@@ -173,7 +173,7 @@ export default function AlertPanel({ selectedCity, selectedCityData }: AlertPane
       </div>
 
       {/* Alerts List Container */}
-      <div className="flex-grow my-4 overflow-y-auto max-h-[360px] pr-1 space-y-3 relative z-10">
+      <div className="flex-grow my-4 overflow-y-auto max-h-[220px] sm:max-h-[300px] lg:max-h-[360px] pr-1 space-y-3 relative z-10">
         <AnimatePresence mode="wait">
           {filteredAlerts.length > 0 ? (
             filteredAlerts.map((alert) => (

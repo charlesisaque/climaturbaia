@@ -177,7 +177,7 @@ export default function HolographicMap({ selectedCity, onSelectCity }: Holograph
   };
 
   return (
-    <div className="relative w-full h-full flex flex-col justify-between p-4 glass-panel border border-cyan-500/10 rounded-2xl overflow-hidden min-h-[480px]">
+    <div className="relative w-full h-[40vh] md:h-[55vh] lg:h-[480px] xl:h-full flex flex-col justify-between p-4 glass-panel border border-cyan-500/10 rounded-2xl overflow-hidden">
       {/* Background Cybernetic Scanning overlay */}
       <div className="absolute inset-0 cyber-grid opacity-40 pointer-events-none" />
       
@@ -187,18 +187,18 @@ export default function HolographicMap({ selectedCity, onSelectCity }: Holograph
       {/* Map Control Headers */}
       <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 w-full border-b border-cyan-500/10 pb-3">
         <div>
-          <h2 className="text-md font-mono tracking-widest text-cyber-cyan flex items-center gap-2">
+          <h2 className="text-sm md:text-md font-mono tracking-widest text-cyber-cyan flex items-center gap-2">
             <Radio className="w-4 h-4 animate-pulse text-red-500" />
             HOLOGRAPHIC SENSOR NETWORK
           </h2>
-          <p className="text-xs text-slate-400 font-mono">Bahia Weather System Map (Sensors: Active)</p>
+          <p className="text-2xs md:text-xs text-slate-400 font-mono">Bahia Weather System Map (Sensors: Active)</p>
         </div>
 
-        {/* Filters Toggles */}
-        <div className="flex bg-slate-950/80 border border-cyan-500/20 rounded-lg p-1 gap-1">
+        {/* Filters Toggles (Swipeable horizontally on mobile) */}
+        <div className="flex overflow-x-auto no-scrollbar max-w-full bg-slate-950/80 border border-cyan-500/20 rounded-lg p-1 gap-1">
           <button
             onClick={() => setActiveFilter("radar")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 text-2xs font-mono rounded transition-all ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-2xs font-mono rounded transition-all whitespace-nowrap shrink-0 ${
               activeFilter === "radar"
                 ? "bg-cyan-500/20 text-cyber-cyan border border-cyber-cyan/30"
                 : "text-slate-400 hover:text-white"
@@ -209,7 +209,7 @@ export default function HolographicMap({ selectedCity, onSelectCity }: Holograph
           </button>
           <button
             onClick={() => setActiveFilter("temp")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 text-2xs font-mono rounded transition-all ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-2xs font-mono rounded transition-all whitespace-nowrap shrink-0 ${
               activeFilter === "temp"
                 ? "bg-orange-500/20 text-cyber-orange border border-cyber-orange/30"
                 : "text-slate-400 hover:text-white"
@@ -220,7 +220,7 @@ export default function HolographicMap({ selectedCity, onSelectCity }: Holograph
           </button>
           <button
             onClick={() => setActiveFilter("rain")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 text-2xs font-mono rounded transition-all ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-2xs font-mono rounded transition-all whitespace-nowrap shrink-0 ${
               activeFilter === "rain"
                 ? "bg-blue-500/20 text-cyan-400 border border-cyan-400/30"
                 : "text-slate-400 hover:text-white"
@@ -231,7 +231,7 @@ export default function HolographicMap({ selectedCity, onSelectCity }: Holograph
           </button>
           <button
             onClick={() => setActiveFilter("nodes")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 text-2xs font-mono rounded transition-all ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-2xs font-mono rounded transition-all whitespace-nowrap shrink-0 ${
               activeFilter === "nodes"
                 ? "bg-emerald-500/20 text-cyber-green border border-cyber-green/30"
                 : "text-slate-400 hover:text-white"
@@ -244,7 +244,7 @@ export default function HolographicMap({ selectedCity, onSelectCity }: Holograph
       </div>
 
       {/* Main Interactive Map Canvas */}
-      <div className="relative flex-grow flex items-center justify-center min-h-[360px]">
+      <div className="relative flex-grow flex items-center justify-center min-h-[200px] sm:min-h-[300px] lg:min-h-[360px]">
         {/* Radar concentric expanding rings on the selected city */}
         {(() => {
           const selected = CITIES_DATABASE[selectedCity];
@@ -452,7 +452,7 @@ export default function HolographicMap({ selectedCity, onSelectCity }: Holograph
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="absolute bottom-4 left-4 right-4 z-20 p-3 bg-slate-950/90 border border-cyan-500/20 backdrop-blur-xl rounded-xl shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-left font-mono"
+              className="absolute bottom-2 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-4 z-20 p-2 sm:p-3 bg-slate-950/90 border border-cyan-500/20 backdrop-blur-xl rounded-xl shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 text-left font-mono"
             >
               {(() => {
                 const target = hoveredCity || CITIES_DATABASE[selectedCity];
@@ -476,31 +476,31 @@ export default function HolographicMap({ selectedCity, onSelectCity }: Holograph
 
                 return (
                   <>
-                    <div className="flex-1 min-w-[200px]">
+                    <div className="flex-1 min-w-[180px] w-full">
                       <div className="flex items-center gap-2">
-                        <span className={`w-2 h-2 rounded-full ${getRiskPulseClass(target.risk)}`} />
-                        <h4 className="text-sm font-bold text-white tracking-widest">{target.name.toUpperCase()}</h4>
-                        <span className={`text-3xs px-2 py-0.5 rounded bg-slate-900 border uppercase font-mono ${borderClass} ${titleColor}`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${getRiskPulseClass(target.risk)}`} />
+                        <h4 className="text-xs sm:text-sm font-bold text-white tracking-widest">{target.name.toUpperCase()}</h4>
+                        <span className={`text-[8px] sm:text-3xs px-2 py-0.5 rounded bg-slate-900 border uppercase font-mono ${borderClass} ${titleColor}`}>
                           {target.riskLabel}
                         </span>
                       </div>
-                      <p className="text-2xs text-slate-400 mt-1 max-w-[450px] leading-relaxed">
+                      <p className="text-3xs sm:text-2xs text-slate-400 mt-0.5 sm:mt-1 max-w-[450px] leading-relaxed">
                         {target.description}
                       </p>
                     </div>
 
-                    <div className="flex gap-4 border-t sm:border-t-0 sm:border-l border-cyan-500/10 pt-2 sm:pt-0 sm:pl-4">
+                    <div className="flex gap-3 sm:gap-4 border-t sm:border-t-0 sm:border-l border-cyan-500/10 pt-2 sm:pt-0 pl-0 sm:pl-4 w-full sm:w-auto justify-around sm:justify-start">
                       <div className="text-center sm:text-left">
-                        <div className="text-3xs text-slate-500">TEMP</div>
-                        <div className="text-sm font-semibold text-cyber-cyan">{target.temp}°C</div>
+                        <div className="text-[8px] sm:text-3xs text-slate-500">TEMP</div>
+                        <div className="text-xs sm:text-sm font-semibold text-cyber-cyan">{target.temp}°C</div>
                       </div>
                       <div className="text-center sm:text-left">
-                        <div className="text-3xs text-slate-500">UMIDADE</div>
-                        <div className="text-sm font-semibold text-cyber-cyan">{target.humidity}%</div>
+                        <div className="text-[8px] sm:text-3xs text-slate-500">UMIDADE</div>
+                        <div className="text-xs sm:text-sm font-semibold text-cyber-cyan">{target.humidity}%</div>
                       </div>
                       <div className="text-center sm:text-left">
-                        <div className="text-3xs text-slate-500">SAFE SCORE</div>
-                        <div className={`text-sm font-semibold ${titleColor}`}>{target.safeScore}%</div>
+                        <div className="text-[8px] sm:text-3xs text-slate-500">SAFE SCORE</div>
+                        <div className={`text-xs sm:text-sm font-semibold ${titleColor}`}>{target.safeScore}%</div>
                       </div>
                     </div>
                   </>
